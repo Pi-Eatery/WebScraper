@@ -1,0 +1,45 @@
+# Python General
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+develop-eggs/
+sdist/
+*.spec
+
+# Virtual Environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE & Editor Configs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Secrets & Config Files
+# NEVER commit sensitive data like API keys or passwords.
+.env
+config.ini
+secrets.json
+
+# Web Scraper Specific
+# Ignore downloaded HTML/XML files and data output files.
+*.html
+*.xml
+*.json
+*.jsonl
+*.csv
+*.log
+
+# Downloaded Media (if applicable)
+/downloads/
+/images/
+/videos/
