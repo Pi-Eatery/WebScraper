@@ -1,8 +1,7 @@
 import lxml
-# import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 
-with open('/home/apple/example.html') as Goodies
+with open('../example.html') as Goodies
 
 Envelope = BeautifulSoup(
     Goodies, 
