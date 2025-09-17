@@ -20,6 +20,11 @@ def openTheMail():
     CollectorStamp = Stamp[0]
     RareFactor = CollectorStamp.get_text(strip=True)
 
+    Phone = Envelope.find_all('li')
+    MailManNum = Phone[2]
+    MailManName = MailManNum.get_text(strip=True)
+    print(MailManName)
+
     PostKeys = Envelope.find_all(string=lambda text: isinstance(text, Comment))
 
     for Key in PostKeys:
@@ -32,8 +37,7 @@ def openTheMail():
     MasterKey = PromisingKeys
     SecretMessage = MasterKey[0]
 
- #   print(f"\nThis is what the news had in the Classified today: {Route}")
-    print(f"The {Street} costs {PostalCode}{RareFactor}! I can't believe the scammers nowadays")
+    print(f"The {Street}({MailManName}) cost me {PostalCode}{RareFactor}! I can't believe the scammers nowadays")
 
 if __name__ == '__main__':
     openTheMail()    
