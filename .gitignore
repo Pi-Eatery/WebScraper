@@ -17,6 +17,12 @@ venv/
 env/
 .venv/
 .env/
+bin/
+lib/
+lib64/
+lib64
+include/
+pyvenv.cfg
 
 # IDE & Editor Configs
 .idea/
