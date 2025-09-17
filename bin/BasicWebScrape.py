@@ -23,15 +23,17 @@ def openTheMail():
     PostKeys = Envelope.find_all(string=lambda text: isinstance(text, Comment))
 
     for Key in PostKeys:
-        if Key.strip():
-            print(f"Comment found...\nRevealing now...\n{Key.strip()} (It is of the type: {type(Key)})")
-            PromisingKeys = [Key.strip() for Key in PostKeys if "API" in Key]
+        PromisingKeys = [Key.strip() for Key in PostKeys if "API" in Key]
+        if Key.strip() == PromisingKeys[0]:
+            print(f"API KEY FOUND EXPOSED\nRESOLVE SECURITY VULNERABILITY IMMEDIATELY")
+        else:
+            print(f"Comment found...\nRevealing now...\n{Key.strip()} (This comment is this type: {type(Key)})")
 
     MasterKey = PromisingKeys
     SecretMessage = MasterKey[0]
 
  #   print(f"\nThis is what the news had in the Classified today: {Route}")
-    print(f"The {Street} costs {PostalCode}{RareFactor}! I can't believe the scammers nowadays\nWhat is this? {SecretMessage}")
+    print(f"The {Street} costs {PostalCode}{RareFactor}! I can't believe the scammers nowadays")
 
 if __name__ == '__main__':
     openTheMail()    
