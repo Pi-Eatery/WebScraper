@@ -1,10 +1,26 @@
 import lxml
+import requests
 from bs4 import BeautifulSoup, Comment
 
-with open('../example.html', 'r') as Goodies:
-    Envelope = BeautifulSoup(Goodies, 'html.parser')
+headers = {'User-Agent': 'MyFirstScraper/1.0'}
 
-def openTheMail():
+#
+#       For Static pages replace 'downloads/pages/example.html' 
+#       with your file's path from the root of this repo
+#       then uncomment it's line and the line after it
+#
+Ink = requests.get('http://quotes.toscrape.com')
+print(Ink)
+if Ink.status_code == 200:
+    with open('downloads/pages/requested.html', 'w') as BlankLetter:
+        print(Ink, file=BlankLetter)
+    with open('downloads/pages/requested.html', 'r') as FullLetter:
+        Envelope = BeautifulSoup(FullLetter, 'html.parser')
+else:
+    with open('downloads/pages/example.html', 'r') as Goodies:
+        Envelope = BeautifulSoup(Goodies, 'html.parser')
+
+def openTheMail(): # Concept in static action
 
     Address = Envelope.select('h1#product-title')
     City = Address[0]
@@ -33,4 +49,5 @@ def openTheMail():
     print(f"Found {Street} ({MailManName}) for {PostalCode}{RareFactor}")
 
 if __name__ == '__main__':
+    
     openTheMail()    
