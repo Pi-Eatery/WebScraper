@@ -1,21 +1,20 @@
+import sys
 import lxml
 import requests
 from bs4 import BeautifulSoup, Comment
 
-headers = {'User-Agent': 'MyFirstScraper/1.0'}
-url = 'http://quotes.toscrape.com'
-#
-#       For Static pages replace 'downloads/pages/example.html' 
-#       with your file's path from the root of this repo
-#       then uncomment it's line and the line after it
-#
-Ink = requests.get(url, headers=headers)
-if Ink.status_code == 200:
-    Envelope = BeautifulSoup(Ink.text, 'html.parser')
-else:
-    print("No requested site detected...\nLoading example page now...\n")
-    with open('downloads/pages/example.html', 'r') as Goodies:
-        Envelope = BeautifulSoup(Goodies, 'html.parser')
+URL = 'http://quotes.toscrape.com'
+HEADERS = {
+    'User-Agent': 'MyFirstScraper/1.0'
+}
+
+try:
+    response = requests.get(URL, headers=HEADERS)
+    response.raise_for_status()
+except requests.exceptions.RequestException as e:
+    print(f"Error: Request to {URL} failed: {e}")
+
+Envelope = BeautifulSoup(response.text, 'html.parser')
 
 def openTheMail():
     Counter = 0
@@ -57,7 +56,4 @@ def sendTheMail(): # Concept in static action (auto runs if the status code of t
     print(f"Found {Street} ({MailManName}) for {PostalCode}{RareFactor}")
 
 if __name__ == '__main__':
-    if Ink.status_code == 200:
-        openTheMail()
-    else:
-        sendTheMail()    
+    openTheMail()
