@@ -11,23 +11,21 @@ headers = {'User-Agent': 'MyFirstScraper/1.0'}
 #
 Ink = requests.get('http://quotes.toscrape.com')
 if Ink.status_code == 200:
-    with open('downloads/pages/requested.html', 'w') as BlankLetter:
-        print(Ink.text, file=BlankLetter)
-    with open('downloads/pages/requested.html', 'r') as FullLetter:
-        Envelope = BeautifulSoup(FullLetter, 'html.parser')
+    Envelope = BeautifulSoup(Ink.text, 'html.parser')
 else:
+    print("No requested site detected...\nLoading example page now...\n")
     with open('downloads/pages/example.html', 'r') as Goodies:
         Envelope = BeautifulSoup(Goodies, 'html.parser')
 
 def openTheMail():
-    AddressBook = []
-    Country = Envelope.find_all()
-    for State in Country:
-        Address = Envelope.find_all('div.quote')
-        print(Address)
-        for Person in Address:
-            AddressBook.append(Person.get_text())
-    print(f"The quotes I could find were:\n {AddressBook}")
+    Counter = 0
+    Address = Envelope.find_all('div', class_='quote')
+    for Family in Address:
+        Household = Family.find('span', class_='text')
+        FullName = Family.find('small', class_='author')
+        Message = Household.get_text(strip=True)
+        LastName = FullName.get_text(strip=True)
+        AddressBook = print(f"\nI found a quote:\n {Message} -- by: {LastName}")
 
 
 def sendTheMail(): # Concept in static action (auto runs if the status code of the requested webpage isn't 200)
