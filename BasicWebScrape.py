@@ -1,6 +1,7 @@
 import sys
 import csv
 import lxml
+import time
 import requests
 from bs4 import BeautifulSoup, Comment
 
@@ -64,6 +65,7 @@ if __name__ == '__main__':
         url_sub = find_next_link(soup)
         if url_sub:
             url_to_scrape = BASE_URL + url_sub
+            time.sleep(1)
         else:
             print(f"No more pages to scrape!")
             url_to_scrape = None
