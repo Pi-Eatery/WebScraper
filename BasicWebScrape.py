@@ -3,13 +3,13 @@ import requests
 from bs4 import BeautifulSoup, Comment
 
 headers = {'User-Agent': 'MyFirstScraper/1.0'}
-
+url = 'http://quotes.toscrape.com'
 #
 #       For Static pages replace 'downloads/pages/example.html' 
 #       with your file's path from the root of this repo
 #       then uncomment it's line and the line after it
 #
-Ink = requests.get('http://quotes.toscrape.com')
+Ink = requests.get(url, headers=headers)
 if Ink.status_code == 200:
     Envelope = BeautifulSoup(Ink.text, 'html.parser')
 else:
