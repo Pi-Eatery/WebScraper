@@ -3,23 +3,13 @@ import lxml
 import requests
 from bs4 import BeautifulSoup, Comment
 
-URL = 'http://quotes.toscrape.com'
-HEADERS = {
-    'User-Agent': 'MyFirstScraper/1.0'
-}
-
-try:
+def get_html_page(URL, HEADERS):
     response = requests.get(URL, headers=HEADERS)
-    response.raise_for_status()
-except requests.exceptions.RequestException as e:
-    print(f"Error: Request to {URL} failed: {e}") 
-    sys.exit(1)
-
-soup = BeautifulSoup(response.text, 'lxml')
+    return response
 
 def extract_quotes(soup_object):
     quotes_list = []
-    quote_containers = soup.find_all('div', class_='quote')
+    quote_containers = soup_object.find_all('div', class_='quote')
     for container in quote_containers:
         text_element = container.find('span', class_='text')
         author_element = container.find('small', class_='author')
@@ -34,23 +24,39 @@ def extract_quotes(soup_object):
     return quotes_list
 
 
-def next_page(url_base):
-    button_containers = soup.find_all('ul', class_='pager')
-    for container in button_container:
+def find_next_link(soup_object):
+    button_containers = soup_object.find_all('ul', class_='pager')
+    for container in button_containers:
+        button_element = container.find('li', class_='next')
         try:
-            button_element = container.find('li', class_='next')
-            url_sub = button_element.get_href()
-            next_url = url_base + url_sub
-        except button_element != container.find('li', class_='next') as e:
-            print(f"No next button found...\nWebscrape completed")
-    return next_url
+            clickable_button = button_element.find('a')
+            url_sub = clickable_button['href']
+            return url_sub
+        except Exception as e:
+            print(f"Last page scraped!\nCompleting script...")
 
 if __name__ == '__main__':
-    scraped_quotes = extract_quotes(soup)
+    url_to_scrape = 'http://quotes.toscrape.com'
+    ethical_headers = {
+        'User-Agent': 'MyFirstScraper/1.0'
+    }
+    quote_master_list = []
+    while url_to_scrape != None:
+        print(url_to_scrape)
+        page_to_scrape = get_html_page(url_to_scrape, ethical_headers)
+        soup = BeautifulSoup(page_to_scrape.text, 'lxml')
+        scraped_quotes = extract_quotes(soup)
+        quote_master_list.extend(scraped_quotes)
+        url_sub = find_next_link(soup)
+        if url_sub != None:
+            url_to_scrape = url_to_scrape + url_sub
+        else:
+            url_to_scrape = None
+
 
     if scraped_quotes:
-        print(f"I found {len(scraped_quotes)} quotes!\n")
-        for quote in scraped_quotes:
+        print(f"I found {len(quote_master_list)} quotes!\n")
+        for quote in quote_master_list:
             print(f"{quote['text']} -- by: {quote['author']}")
     else:
         print(f"I couldn't find any quotes on this page:\n{URL}")
