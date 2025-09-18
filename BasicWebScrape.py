@@ -1,7 +1,11 @@
 import sys
+import csv
 import lxml
 import requests
 from bs4 import BeautifulSoup, Comment
+
+
+BASE_URL = 'http://quotes.toscrape.com'
 
 def get_html_page(URL, HEADERS):
     response = requests.get(URL, headers=HEADERS)
@@ -24,39 +28,49 @@ def extract_quotes(soup_object):
 
 
 def find_next_link(soup_object):
-    button_containers = soup_object.find_all('ul', class_='pager')
-    for container in button_containers:
-        button_element = container.find('li', class_='next')
-        if button_element:
-            clickable_button = button_element.find('a')
+    button_element = soup_object.find('li', class_='next')
+    if button_element:
+        clickable_button = button_element.find('a')
+        if clickable_button and 'href' in clickable_button.attrs:
             url_sub = clickable_button['href']
             return url_sub
-        else:
-            print(f"Last page scraped!")
+    else:
+        print(f"Last page scraped!")
+
+def save_to_csv(quotes_list, filename="quotes.csv"):
+    headers = ['text', 'author']
+
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(quotes_list)
+    
 
 if __name__ == '__main__':
-    original_url = 'http://quotes.toscrape.com'
-    url_to_scrape = original_url
+    url_to_scrape = BASE_URL
     ethical_headers = {
         'User-Agent': 'MyFirstScraper/1.0'
     }
     quote_master_list = []
-    while url_to_scrape != None:
-        print(url_to_scrape)
+    while url_to_scrape:
+        print(f"Scraping page: {url_to_scrape}")
         page_to_scrape = get_html_page(url_to_scrape, ethical_headers)
+        if not page_to_scrape:
+            break
+
         soup = BeautifulSoup(page_to_scrape.text, 'lxml')
         scraped_quotes = extract_quotes(soup)
         quote_master_list.extend(scraped_quotes)
         url_sub = find_next_link(soup)
-        if url_sub != None:
-            url_to_scrape = original_url + url_sub
+        if url_sub:
+            url_to_scrape = BASE_URL + url_sub
         else:
+            print(f"No more pages to scrape!")
             url_to_scrape = None
 
-
-    if scraped_quotes:
+    if quote_master_list:
+        save_to_csv(quote_master_list)
         print(f"I found {len(quote_master_list)} quotes!\n")
-        for quote in quote_master_list:
-            print(f"{quote['text']} -- by: {quote['author']}")
+        print(f"Data saved to quotes.csv")
     else:
-        print(f"I couldn't find any quotes on this page:\n{URL}")
+        print(f"Scraping failed...\nI couldn't find any quotes on this page:\n{URL}")
