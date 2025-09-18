@@ -20,7 +20,6 @@ def extract_quotes(soup_object):
             'text': quote_text,
             'author': author_text
         })
-    
     return quotes_list
 
 
@@ -28,15 +27,16 @@ def find_next_link(soup_object):
     button_containers = soup_object.find_all('ul', class_='pager')
     for container in button_containers:
         button_element = container.find('li', class_='next')
-        try:
+        if button_element:
             clickable_button = button_element.find('a')
             url_sub = clickable_button['href']
             return url_sub
-        except Exception as e:
-            print(f"Last page scraped!\nCompleting script...")
+        else:
+            print(f"Last page scraped!")
 
 if __name__ == '__main__':
-    url_to_scrape = 'http://quotes.toscrape.com'
+    original_url = 'http://quotes.toscrape.com'
+    url_to_scrape = original_url
     ethical_headers = {
         'User-Agent': 'MyFirstScraper/1.0'
     }
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         quote_master_list.extend(scraped_quotes)
         url_sub = find_next_link(soup)
         if url_sub != None:
-            url_to_scrape = url_to_scrape + url_sub
+            url_to_scrape = original_url + url_sub
         else:
             url_to_scrape = None
 
