@@ -10,17 +10,27 @@ headers = {'User-Agent': 'MyFirstScraper/1.0'}
 #       then uncomment it's line and the line after it
 #
 Ink = requests.get('http://quotes.toscrape.com')
-print(Ink)
 if Ink.status_code == 200:
     with open('downloads/pages/requested.html', 'w') as BlankLetter:
-        print(Ink, file=BlankLetter)
+        print(Ink.text, file=BlankLetter)
     with open('downloads/pages/requested.html', 'r') as FullLetter:
         Envelope = BeautifulSoup(FullLetter, 'html.parser')
 else:
     with open('downloads/pages/example.html', 'r') as Goodies:
         Envelope = BeautifulSoup(Goodies, 'html.parser')
 
-def openTheMail(): # Concept in static action
+def openTheMail():
+    AddressBook = []
+    Country = Envelope.find_all()
+    for State in Country:
+        Address = Envelope.find_all('div.quote')
+        print(Address)
+        for Person in Address:
+            AddressBook.append(Person.get_text())
+    print(f"The quotes I could find were:\n {AddressBook}")
+
+
+def sendTheMail(): # Concept in static action (auto runs if the status code of the requested webpage isn't 200)
 
     Address = Envelope.select('h1#product-title')
     City = Address[0]
@@ -49,5 +59,7 @@ def openTheMail(): # Concept in static action
     print(f"Found {Street} ({MailManName}) for {PostalCode}{RareFactor}")
 
 if __name__ == '__main__':
-    
-    openTheMail()    
+    if Ink.status_code == 200:
+        openTheMail()
+    else:
+        sendTheMail()    
