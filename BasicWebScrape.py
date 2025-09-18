@@ -30,7 +30,20 @@ def extract_quotes(soup_object):
             'text': quote_text,
             'author': author_text
         })
+    
     return quotes_list
+
+
+def next_page(url_base):
+    button_containers = soup.find_all('ul', class_='pager')
+    for container in button_container:
+        try:
+            button_element = container.find('li', class_='next')
+            url_sub = button_element.get_href()
+            next_url = url_base + url_sub
+        except button_element != container.find('li', class_='next') as e:
+            print(f"No next button found...\nWebscrape completed")
+    return next_url
 
 if __name__ == '__main__':
     scraped_quotes = extract_quotes(soup)
