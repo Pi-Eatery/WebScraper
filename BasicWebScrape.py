@@ -127,7 +127,7 @@ class QuoteScraper:
             url_sub = self.find_next_link(soup)
             if url_sub:
                 url_to_scrape = self.base_url + url_sub
-                # RATE LIMITING: Always include a delay in the scraping loop
+                # CRITICAL: Always include a delay in the scraping loop
                 # to avoid overwhelming the server.
                 # DO NOT REMOVE THE NEXT LINE
                 time.sleep(1)
