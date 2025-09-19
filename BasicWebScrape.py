@@ -33,6 +33,7 @@ class QuoteScraper:
     def get_html_page(self, url):
         try:
             response = requests.get(url, headers=self.ethical_headers)
+            # .raise_for_status() will raise an HTTPError for bad responses
             response.raise_for_status()
             return response
         except requests.exceptions.RequestException as e:
@@ -56,6 +57,7 @@ class QuoteScraper:
             text_element = container.find('span', class_='text')
             author_element = container.find('small', class_='author')
             if text_element and author_element:
+                # Using strip=True ensures the captured text data is clean
                 quote_text = text_element.get_text(strip=True)
                 author_text = author_element.get_text(strip=True)
             quotes_list.append({
@@ -73,7 +75,7 @@ class QuoteScraper:
             the parsed HTML of a page.
 
     Returns:
-        button_element.find('a')['href'] (str): The href attribute of
+        str: The href attribute of
             the 'next' page link, or None if it is not found.
     """
     def find_next_link(self, soup_object):
@@ -138,7 +140,7 @@ class QuoteScraper:
             print(f"I found {len(self.quotes_master_list)} quotes!\n")
             print(f"Data saved to quotes.csv")
         else:
-            print(f"Scraping failed...\nI couldn't find any quotes on this page:\n{URL}")
+            print(f"Scraping failed...\nI couldn't find any quotes on this page:\n{self.base_url}")
 
 
 if __name__ == '__main__':
