@@ -1,4 +1,4 @@
-# **🛡️ Secure Web Scraper Foundation**
+# **🛡️ Secure Web Scraper**
 
 A foundational Python script for learning web scraping with a strong emphasis on security, ethics, and robust coding practices.
 
